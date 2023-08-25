@@ -1,0 +1,82 @@
+{% assign main_menu_linklist = linklists[section.settings.menu].links %}
+
+<header class="site-header">
+    <a href="{{routes.root_url}}" class="site-header__brand">
+        {{ shop.name }}
+    </a>
+
+    <nav id="headerNav" class="site-header__nav">
+        <ol>
+        {% for link in main_menu_linklist %}
+            <li>
+                {% if link.links != blank %}
+                    <button type="button" class="site-header-nav__top-level-item" data-toggle="next">
+                        {{ link.title }}
+                        {% render 'icon-chevron-down', class: 'w-4 h-5 ml-1' %}
+                    </button>
+
+                    <div class="site-header__nav-dropdown">
+                        {% for sublink in link.links %}
+                            <a href="{{sublink.url}}" class="site-header-nav__dropdown-item">
+                                {{sublink.title}}
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if link.links == blank %}
+                    <a
+                        href="link.url"
+                        class="site-header-nav__top-level"
+                    >
+                        {{- link.title -}}
+                    </a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ol>
+
+        <ol class="site-header-nav__user">
+            <li>
+                <a href="{{routes.account_login_url}}" class="site-header-nav__top-level">Login</a>
+            </li>
+
+            <li>
+                <a href="{{routes.account_register_url}}" class="site-header-nav__top-level">Register</a>
+            </li>
+        </ol>
+    </nav>
+    <button type="button" class="site-header__burger" data-toggle="#headerNav">
+        <span class="sr-only">
+            {{ section.settings.mobile_menu_title }}
+        </span>
+        {% render 'icon-burger', class: 'w-5 h-5' %}
+    </button>
+    <a href="{{routes.cart_url}}" class="site-header__cart">
+            <span class="sr-only">Cart</span>
+            {% render 'icon-shopping-bag', class: 'w-5 h-5' %}
+        </a>
+    </div>
+</header>
+
+{% schema %}
+{
+    "name": "Header",
+    "settings": [
+        {
+            "type": "link_list",
+            "id": "menu",
+            "label": "Header Menu",
+            "default": "main-menu",
+            "info": "Menu to be displayed in the site header."
+        },
+        {
+            "type": "text",
+            "id": "mobile_menu_title",
+            "label": "Mobile nav toggle text",
+            "default": "Toggle site navigation",
+            "info": "Screen reader text for the hamburger menu."
+        }
+    ]
+}
+
+{% endschema %}
